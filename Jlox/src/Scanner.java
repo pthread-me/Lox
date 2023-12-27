@@ -14,13 +14,13 @@ public class Scanner {
 
 	private final String source;
 	private final List<Token> tokens = new ArrayList<>();
-
+	private static final Map<String, TokenType> keywords;
 	private int start = 0;
 	private int current = 0;
 	private int line = 1;
 
 	static {
-		Map<String, TokenType> keywords = new HashMap<>();
+		keywords = new HashMap<>();
 
 		keywords.put("and", AND);
 		keywords.put("class", CLASS);
@@ -162,6 +162,8 @@ public class Scanner {
 		if(isAtEnd()){
 			Lox.error(line, "Unterminated String");
 		}
+
+		advance();
 
 		//extracting the string without the ""
 		String value = source.substring(start+1, current-1);
