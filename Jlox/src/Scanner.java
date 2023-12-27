@@ -18,6 +18,7 @@ public class Scanner {
 	private int start = 0;
 	private int current = 0;
 	private int line = 1;
+	private int nested_comment;
 
 	static {
 		keywords = new HashMap<>();
@@ -83,6 +84,27 @@ public class Scanner {
 			case '/' -> {
 				if(match('/')){
 					while(peak() != '\n' && !isAtEnd()) advance();
+				}else if(match('*')){
+					nested_comment ++;
+
+					while (nested_comment!=0 && !isAtEnd()){
+						if(peak()=='/' && peakNext() == '*'){
+							nested_comment++;
+							advance();
+							advance();
+							continue;
+						} else if(peak()=='*' && peakNext()=='/'){
+							nested_comment--;
+							advance();
+							advance();
+							continue;
+						}
+
+						if(peak() == '\n'){
+							line++;
+						}
+						advance();
+					}
 				}else{
 					addToken(SLASH);
 				}
