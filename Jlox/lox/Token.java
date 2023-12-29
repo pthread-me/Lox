@@ -1,4 +1,4 @@
-package src;
+package lox;
 
 public class Token {
 

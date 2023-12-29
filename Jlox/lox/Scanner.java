@@ -1,12 +1,11 @@
-package src;
+package lox;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static src.TokenType.*;
+import static lox.TokenType.*;
 
 
 
