@@ -103,7 +103,37 @@ class Parser {
 
 
     private Expr expression(){
-        return equation();
+        return listing();
+    }
+
+    /**
+     * Supports the comma operator as in a list of expressions : a,b,c
+     * @return the total expression left associative so (, (, a b) c)
+     */
+    private Expr listing(){
+        Expr expr = ternary();
+        while (match(COMMA)){
+            Token operator = advance();
+            Expr right = equation();
+
+            expr = new Expr.Binary(expr, operator, right);
+        }
+        return expr;
+    }
+
+    private Expr ternary(){
+        Expr expr = equation();
+
+        if(match(QUESTION_MARK)){
+            Token first = advance();
+            Expr left = expression();
+            Token second = consume(COLON, "a ternary operation has the format a?b:c\t the " +
+                    "inputted string is missing a :");
+            Expr right = expression();
+
+            expr = new Expr.Ternary(expr, first, left, second, right );
+        }
+        return expr;
     }
 
     private Expr equation(){
@@ -126,7 +156,7 @@ class Parser {
             Token operator = advance();
             Expr right = term();
 
-            return new Expr.Binary(expr, operator, right);
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
@@ -138,7 +168,7 @@ class Parser {
             Token operator = advance();
             Expr right = factor();
 
-            return new Expr.Binary(expr, operator, right);
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
@@ -150,7 +180,7 @@ class Parser {
             Token operator = advance();
             Expr right = unary();
 
-            return new Expr.Binary(expr, operator, right);
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
@@ -173,7 +203,6 @@ class Parser {
             case TRUE -> {advance(); return new Expr.Literal(true);}
             case NIL -> {advance(); return new Expr.Literal(null);}
             case NUMBER, STRING -> {advance(); return new Expr.Literal(cur.literal);}
-
             case LEFT_PAREN -> {
                 advance();
                 Expr expr = expression();

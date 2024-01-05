@@ -8,6 +8,9 @@ abstract class Expr {
 		R visitBinaryExpr(Binary expr);
 		R BinaryRPN(Binary expr);
 
+		R visitTernaryExpr(Ternary expr);
+		R TernaryRPN(Ternary expr);
+
 		R visitGroupingExpr(Grouping expr);
 		R GroupingRPN(Grouping expr);
 
@@ -34,6 +37,28 @@ abstract class Expr {
 }
 		Expr left;
 		Token operator;
+		Expr right;
+	}
+	static class Ternary extends Expr {
+		Ternary( Expr condition, Token first, Expr left, Token second, Expr right){
+		this.condition = condition;
+		this.first = first;
+		this.left = left;
+		this.second = second;
+		this.right = right;
+		}
+		@Override
+		<R> R accept(Visitor<R> visitor){
+		return visitor.visitTernaryExpr(this);
+}
+		@Override
+		<R> R RPN(Visitor<R> visitor){
+		return visitor.TernaryRPN(this);
+}
+		Expr condition;
+		Token first;
+		Expr left;
+		Token second;
 		Expr right;
 	}
 	static class Grouping extends Expr {

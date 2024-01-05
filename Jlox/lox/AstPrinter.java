@@ -24,6 +24,11 @@ public class AstPrinter implements Expr.Visitor<String> {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }
     @Override
+    public String visitTernaryExpr(Expr.Ternary expr){
+        return "("+expr.condition.accept(this) +") "+ expr.first.lexeme +" ("+ expr.left.accept(this)+ ") "+
+                expr.second.lexeme +" ("+ expr.right.accept(this)+")";
+    }
+    @Override
     public String visitGroupingExpr(Expr.Grouping expr){
         return parenthesize("group", expr.expression);
     }
@@ -66,6 +71,10 @@ public class AstPrinter implements Expr.Visitor<String> {
     }
     public String LiteralRPN(Expr.Literal expr){
         return expr.value.toString();
+    }
+    public String TernaryRPN(Expr.Ternary expr){
+        return "("+expr.condition.RPN(this) +") "+ expr.first.lexeme +" ("+ expr.left.RPN(this)+ ") "+
+                expr.second.lexeme +" ("+ expr.right.RPN(this)+")";
     }
     public String GroupingRPN(Expr.Grouping expr){
         return RPN_reformat("", expr.expression);
