@@ -209,6 +209,11 @@ class Parser {
                 Token right = consume(RIGHT_PAREN, "Missing closing parentheses");
                 return new Expr.Grouping(expr);
             }
+            case EQUAL_EQUAL, BANG_EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL -> {
+                advance();
+                Expr discard = equation();
+                throw error(cur, "Binary operator does not have a left-hand operand");
+            }
         }
         throw error(cur, "Invalid Symbol");
    }
