@@ -86,7 +86,7 @@ class Parser {
     }
 
     /**
-     * look current token and return true if it matches any of the operators
+     * looks at current token and return true if it matches any of the operators
      * @param operators a list of operators to test on
      * @return true if there's a hit
      */
